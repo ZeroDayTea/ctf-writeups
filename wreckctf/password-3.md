@@ -166,7 +166,7 @@ One piece of feedback we do get is whether or not our SQL injection string did i
 
 Thankfully, SQL has the aptly named `LIKE` operator that does just this. We can use the LIKE operator in conjunction with the `%` wildcard character to match the flag in the database character by character with the server returning a valid logged in `true` response only if our guess is similar to the flag in the `passwords` table.
 
-Our exploit string should look something along the lines of `' OR password LIKE '[guess]%` utilizing the previously selected password variable in the first half of the statement as well as the already provided ending single quote `'`; at the end of the statement.
+Our exploit string should look something along the lines of `' OR password LIKE '[guess]%` utilizing the previously selected `password` variable in the first half of the statement as well as the already provided ending single quote `'`; at the end of the statement.
 
 ## The Exploit
 Writing up a quick bruteforce script to run this iteratively on the `/password` endpoint we get our final exploit
