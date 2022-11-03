@@ -131,7 +131,8 @@ we realize that after clicking the `Login` button our password field data will b
 SELECT password FROM passwords WHERE password='${password}';`.
 ```
 
-Trying the standard authentication bypass string `admin' OR '1'='1';--` and logging in we are able to see the message `Congrats on logging in! However, that's not enough... can you find the flag in the database this time?`
+Trying the standard authentication bypass string `admin' OR '1'='1';--` and logging in we are able to see the message 
+`Congrats on logging in! However, that's not enough... can you find the flag in the database this time?`
 
 Looking more closely at the provided source code we see 
 ```js
@@ -160,6 +161,7 @@ db.exec(`
 
 The flag we are looking for is loaded in from an environment variable as is standard and INSERTed into the sqlite3 database. With seemingly no feedback from our SQL injections, however, we'll have to think of a more creative way to leak the passwords table in the database!
 
+## Thinking About The Problem and SQL
 One piece of feedback we do get is whether or not our SQL injection string did in fact run successfully and match something in the database or not. If we could somehow send a SQL injection that would return true if our input was similar to or LIKE one of the actual passwords in the database, we could bruteforce the password character by character.
 
 Thankfully, SQL has the aptly named `LIKE` operator that does just this. We can use the LIKE operator in conjunction with the `%` wildcard character to match the flag in the database character by character with the server returning a valid logged in `true` response only if our guess is similar to the flag in the `passwords` table.
