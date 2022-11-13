@@ -3,7 +3,7 @@ I love ducks so I was a little saddened to see that this duck was a canary in di
 ## Problem Description
 >![[stackduck.png]]
 
-In addition to this adorable meme we are provided with a zip file containing some setup files, a fake flag.txt, an ELF binary, as well as the C source code for our binary. Let's take a look at that first.
+In addition to this adorable meme, we are provided with a zip file containing some setup files, a fake flag.txt, an ELF binary, as well as the C source code for our binary. Let's take a look at that first.
 
 ```c
 #include <stdio.h>
@@ -75,7 +75,7 @@ Let's break this down one by one.
 ## Stack Protections
 RELRO refers to the `"Relocation Read Only"` stack security measure which forces some sections of a binary's memory to be read-only. The two settings for RELRO include "partial" and "full". Partial RELRO is what binary's are compiled with by default using `gcc` or `g++`, and means that the GOT (Global Offset Table) appears before the BSS (location of global and static variables) in memory. If Partial RELRO is not enabled then there is the potential for a buffer overflow attack on a global variable to overflow and overwrite some entry in the GOT linking one function with another's address. An example of this would be an attacker overwriting the address of the `puts` or `printf` function with a syscall so whenever the binary calls `puts` or `printf` the next time it instead executes the malicious syscall. 
 
-Full RELRO is usually disabled by default on compilers largely because of the increase in startup time it adds. Full RELRO makes the entirety of the GOT read-only preventing any attempt at a GOT overwrite attack. As all of the binary's symbolic references (symbols for short), or references to data and code such as global variables and functions, must be resolved before the program code is executed, this can greatly increase startup time for programs with lots of symbols.
+Full RELRO is usually disabled by default on compilers largely because of the increase in startup time it adds. Full RELRO makes the entirety of the GOT read-only preventing any attempt at a GOT overwrite attack. All of the binary's symbols, or references to data and code such as global variables and functions, must be resolved before the program code is executed which can greatly increase startup time for programs with lots of symbols.
 
 NX stands for `"Non-executable stack"` which is a virtual memory procedure in which the Memory Management Unit (MMU) of the CPU implements an NX bit that sets each memory page as either allowed to or not allowed to execute code. It specifically restricts the stack from being able to execute code so if an attacker were to attempt to inject any shellcode on a variable contained on the stack and return to it, the program would crash. Looking to [shellstorm](https://shell-storm.org/shellcode/index.html) this seems like a pretty important protection considering shellcode like the one below can spawn a shell in just 29 bytes
 ![[shellstorm.png]]
